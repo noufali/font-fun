@@ -165,25 +165,25 @@ function doSnap(path) {
 		var cmd;
     var strength = snapStrength / 100.0;
     for (i = 0; i < path.commands.length; i++) {
-        // cmd = path.commands[i];
-				// console.log(cmd);
-        // if (cmd.type !== 'Z') {
-        //     cmd.x = snap(cmd.x + snapX, snapDistance, strength) - snapX;
-        //     cmd.y = snap(cmd.y + snapY, snapDistance, strength) - snapY;
-        // }
-        // if (cmd.type === 'Q' || cmd.type === 'C') {
-        //     cmd.x1 = snap(cmd.x1 + snapX, snapDistance, strength) - snapX;
-        //     cmd.y1 = snap(cmd.y1 + snapY, snapDistance, strength) - snapY;
-        // }
-        // if (cmd.type === 'C') {
-        //     cmd.x2 = snap(cmd.x2 + snapX, snapDistance, strength) - snapX;
-        //     cmd.y2 = snap(cmd.y2 + snapY, snapDistance, strength) - snapY;
-        // }
+        cmd = path.commands[i];
+				//console.log(cmd);
+        if (cmd.type !== 'Z') {
+            cmd.x = snap(cmd.x + snapX, snapDistance, strength) - snapX;
+            cmd.y = snap(cmd.y + snapY, snapDistance, strength) - snapY;
+        }
+        if (cmd.type === 'Q' || cmd.type === 'C') {
+            cmd.x1 = snap(cmd.x1 + snapX, snapDistance, strength) - snapX;
+            cmd.y1 = snap(cmd.y1 + snapY, snapDistance, strength) - snapY;
+        }
+        if (cmd.type === 'C') {
+            cmd.x2 = snap(cmd.x2 + snapX, snapDistance, strength) - snapX;
+            cmd.y2 = snap(cmd.y2 + snapY, snapDistance, strength) - snapY;
+        }
     }
 		//console.log(path.commands[0]);
-		cmd = path.commands[0];
-    cmd.x = snap(cmd.x + snapX, snapDistance, strength) - snapX;
-    cmd.y = snap(cmd.y + snapY, snapDistance, strength) - snapY;
+		//cmd = path.commands[0];
+    //cmd.x = snap(cmd.x + snapX, snapDistance, strength) - snapX;
+    //cmd.y = snap(cmd.y + snapY, snapDistance, strength) - snapY;
 
 }
 
@@ -232,21 +232,38 @@ function renderText() {
     snapPath = font.getPath(textToRender, 300, 200, fontSize, options);
 		snapPath.fill = "#EB5D4A";
     doSnap(snapPath);
+
+		// snapPath2 = font.getPath(textToRender, 50, 100, fontSize, options);
+		// snapPath2.fill = "#EB5D4A";
+    // doSnap(snapPath2);
+
+		snapPath3 = font.getPath(textToRender, 600, 200, fontSize, options);
+		snapPath3.fill = "#EB5D4A";
+		doSnap(snapPath3);
+
     var snapCtx = document.getElementById('snap').getContext('2d');
     snapCtx.clearRect(0, 0, 940, 300);
     snapPath.draw(snapCtx);
+		//snapPath2.draw(snapCtx);
+		snapPath3.draw(snapCtx);
 }
 
 let value = 37;
 
+function map (num, in_min, in_max, out_min, out_max) {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 two.bind('update', function(frameCount) {
 	var face_Pts = [];
 	two.clear();
-	if (smileFactor){
+	if (smileFactor) {
 		value = (smileFactor * 100).toFixed(0);
-		console.log(value);
-		//snapDistanceChanged(37);
-		snapStrengthChanged(value);
+		let n = map(value,0,100,100,0);
+		let d = map(value,0,100,37,90);
+		console.log(n);
+		snapDistanceChanged(d);
+		snapStrengthChanged(n);
 		fontSizeChanged(150);
 	}
 	//snapStrengthChanged(smileFactor);
